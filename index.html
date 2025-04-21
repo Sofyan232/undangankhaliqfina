@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undangan Pernikahan - [Nama Pasangan]</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Gaya dasar untuk body dan font */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden; /* Mencegah scroll horizontal */
+            position: relative; /* Diperlukan untuk elemen posisi absolut/fixed */
+            background-color: #111827; /* Fallback background jika video lambat load */
+        }
+
+        /* Gaya untuk video background */
+        #video-bg {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -100; /* Pastikan video di belakang konten */
+            object-fit: cover; /* Pastikan video menutupi area */
+            filter: brightness(0.5); /* Sedikit meredupkan video agar teks lebih terbaca */
+        }
+
+        /* Gaya Glassmorphism */
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.1); /* Warna latar belakang semi-transparan */
+            backdrop-filter: blur(12px); /* Efek blur sedikit lebih kuat */
+            -webkit-backdrop-filter: blur(12px); /* Dukungan untuk Safari */
+            border-radius: 1rem; /* Sudut membulat */
+            border: 1px solid rgba(255, 255, 255, 0.18); /* Border lebih halus */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); /* Bayangan lebih jelas */
+            position: relative; /* Diperlukan untuk pseudo-element dekoratif */
+            overflow: hidden; /* Mencegah dekorasi keluar dari kartu */
+        }
+        /* Glassmorphism untuk elemen dalam kartu */
+         .inner-glassmorphism {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border-radius: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+         }
+
+        /* Pastikan konten utama tidak tertutup video atau dekorasi */
+        .content-wrapper {
+            position: relative;
+            z-index: 10; /* Naikkan z-index agar di atas dekorasi bunga */
+            padding-bottom: 4rem; /* Beri ruang di bawah */
+        }
+
+        /* --- Dekorasi Tambahan --- */
+
+        /* Wadah untuk animasi bunga */
+        .flower-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Agar tidak mengganggu interaksi mouse */
+            z-index: 5; /* Di antara video dan konten */
+            overflow: hidden;
+        }
+
+        /* Gaya dasar untuk bunga */
+        .flower {
+            position: absolute;
+            top: -10%; /* Mulai dari atas layar */
+            font-size: 1.5rem; /* Ukuran bunga */
+            opacity: 0.6; /* Sedikit lebih redup */
+            animation: fall linear infinite;
+            text-shadow: 0 0 5px rgba(255, 192, 203, 0.5); /* Efek glow pink */
+        }
+
+        /* Keyframes animasi jatuh */
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(110vh) rotate(360deg); /* Jatuh ke bawah layar sambil berputar */
+                opacity: 0.1;
+            }
+        }
+
+        /* Variasi posisi horizontal dan durasi/delay animasi (sama seperti sebelumnya) */
+        .flower:nth-child(1) { left: 10%; animation-duration: 15s; animation-delay: 0s; }
+        .flower:nth-child(2) { left: 20%; animation-duration: 12s; animation-delay: 3s; font-size: 1.2rem; }
+        .flower:nth-child(3) { left: 30%; animation-duration: 18s; animation-delay: 1s; }
+        .flower:nth-child(4) { left: 40%; animation-duration: 14s; animation-delay: 5s; font-size: 1.6rem; }
+        .flower:nth-child(5) { left: 50%; animation-duration: 16s; animation-delay: 2s; }
+        .flower:nth-child(6) { left: 60%; animation-duration: 11s; animation-delay: 6s; font-size: 1.3rem; }
+        .flower:nth-child(7) { left: 70%; animation-duration: 19s; animation-delay: 4s; }
+        .flower:nth-child(8) { left: 80%; animation-duration: 13s; animation-delay: 0.5s; font-size: 1.7rem; }
+        .flower:nth-child(9) { left: 90%; animation-duration: 17s; animation-delay: 2.5s; }
+        .flower:nth-child(10) { left: 15%; animation-duration: 20s; animation-delay: 7s; font-size: 1.4rem; }
+        .flower:nth-child(11) { left: 75%; animation-duration: 10s; animation-delay: 8s; }
+        .flower:nth-child(12) { left: 35%; animation-duration: 22s; animation-delay: 9s; font-size: 1.1rem; }
+
+        /* Gaya untuk foto mempelai */
+        .profile-img {
+            width: 120px; /* Ukuran foto */
+            height: 120px;
+            border-radius: 50%; /* Membuat foto bulat */
+            object-fit: cover; /* Memastikan gambar mengisi area tanpa distorsi */
+            border: 3px solid rgba(255, 255, 255, 0.3); /* Border halus */
+            margin: 0 auto 1rem auto; /* Tengah dan beri jarak bawah */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Gaya untuk tombol Instagram (menggantikan .icon-button sebelumnya) */
+        .instagram-button {
+            display: inline-flex; /* Agar ikon dan teks sejajar */
+            align-items: center; /* Tengah secara vertikal */
+            padding: 0.5rem 1rem; /* Padding tombol */
+            border-radius: 999px; /* Bentuk pil */
+            color: white;
+            font-size: 0.9rem; /* Ukuran font teks */
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 0 0.5rem; /* Jarak antar tombol jika ada */
+            /* Background Gradien Animasi */
+            background: linear-gradient(-45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Border halus */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .instagram-button:hover {
+            transform: scale(1.05); /* Sedikit membesar saat hover */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .instagram-button i {
+             font-size: 1.1rem; /* Ukuran ikon instagram */
+             margin-right: 0.5rem; /* Jarak antara ikon dan teks */
+        }
+
+        /* Keyframes untuk animasi gradien */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+
+        /* Gaya untuk Buku Tamu */
+        .guestbook-form textarea,
+        .guestbook-form input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            color: white;
+            width: 100%;
+            margin-bottom: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        .guestbook-form textarea:focus,
+        .guestbook-form input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        .guestbook-form ::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .submit-button {
+             background-color: rgba(255, 255, 255, 0.2);
+             border: 1px solid rgba(255, 255, 255, 0.3);
+             padding: 0.75rem 1.5rem;
+             border-radius: 999px; /* Pill shape */
+             color: white;
+             font-weight: bold;
+             transition: all 0.3s ease;
+             cursor: pointer;
+        }
+         .submit-button:hover {
+             background-color: rgba(255, 255, 255, 0.3);
+             transform: translateY(-2px);
+             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+         }
+
+        /* Placeholder untuk komentar tamu (dihapus sesuai permintaan) */
+        /* .guestbook-entry { ... } */
+
+        /* Gaya untuk Google Maps */
+        .map-container {
+            border-radius: 1rem;
+            overflow: hidden; /* Agar border-radius bekerja pada iframe */
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            margin-top: 2rem;
+        }
+        .map-container iframe {
+            display: block; /* Menghilangkan spasi bawah default iframe */
+            width: 100%;
+            min-height: 300px; /* Tinggi minimal peta */
+            border: none; /* Hapus border default iframe */
+        }
+
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+
+    <video autoplay muted loop id="video-bg">
+        <source src="https://cdn.pixabay.com/video/2020/09/02/48873-457671829_large.mp4" type="video/mp4">
+        Browser Anda tidak mendukung tag video.
+    </video>
+
+    <div class="flower-container" aria-hidden="true">
+        <span class="flower">🌸</span> <span class="flower">🌸</span> <span class="flower">🌸</span>
+        <span class="flower">🌸</span> <span class="flower">🌸</span> <span class="flower">🌸</span>
+        <span class="flower">🌸</span> <span class="flower">🌸</span> <span class="flower">🌸</span>
+        <span class="flower">🌸</span> <span class="flower">🌸</span> <span class="flower">🌸</span>
+    </div>
+
+    <div class="content-wrapper min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 md:p-8">
+
+        <div class="glassmorphism w-full max-w-3xl p-6 sm:p-8 md:p-10 text-center animate__animated animate__fadeInUp mb-8">
+
+            <header class="mb-8">
+                <h2 class="text-xl sm:text-2xl font-light mb-2 animate__animated animate__fadeInDown animate__delay-1s">Undangan Pernikahan</h2>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-pink-300 mb-2 animate__animated animate__fadeInDown animate__delay-1s">[Nama Mempelai Pria]</h1>
+                <span class="text-2xl sm:text-3xl font-light mx-4 animate__animated animate__fadeIn animate__delay-2s">&</span>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-blue-300 mb-4 animate__animated animate__fadeInUp animate__delay-1s">[Nama Mempelai Wanita]</h1>
+                <p class="text-lg sm:text-xl mt-4 animate__animated animate__fadeIn animate__delay-2s">Kami mengundang Anda untuk merayakan cinta kami</p>
+            </header>
+
+             <section class="mb-10 animate__animated animate__fadeIn animate__delay-2s">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="text-center">
+                        <img src="https://awsimages.detik.net.id/community/media/visual/2023/04/03/jas-pengantin-pria-2_34.jpeg?w=1200"
+                             alt="Foto Mempelai Pria"
+                             class="profile-img"
+                             onerror="this.onerror=null; this.src='https://placehold.co/120x120/CCCCCC/FFFFFF?text=Foto+?';">
+                        <h3 class="text-2xl font-semibold mb-2 text-pink-200">[Nama Lengkap Pria]</h3>
+                        <p class="text-sm mb-3 text-gray-300">Putra dari Bapak [Nama Ayah Pria] & Ibu [Nama Ibu Pria]</p>
+                        <a href="https://instagram.com/username_pria" target="_blank" class="instagram-button" aria-label="Instagram Mempelai Pria">
+                            <i class="fab fa-instagram"></i>
+                            <span>@username_pria</span> </a>
+                    </div>
+                    <div class="text-center">
+                         <img src="https://i.pinimg.com/originals/57/a2/9e/57a29e8baed3c43c96021a36d21c480b.jpg"
+                             alt="Foto Mempelai Wanita"
+                             class="profile-img"
+                             onerror="this.onerror=null; this.src='https://placehold.co/120x120/CCCCCC/FFFFFF?text=Foto+?';">
+                        <h3 class="text-2xl font-semibold mb-2 text-blue-200">[Nama Lengkap Wanita]</h3>
+                        <p class="text-sm mb-3 text-gray-300">Putri dari Bapak [Nama Ayah Wanita] & Ibu [Nama Ibu Wanita]</p>
+                         <a href="https://instagram.com/username_wanita" target="_blank" class="instagram-button" aria-label="Instagram Mempelai Wanita">
+                            <i class="fab fa-instagram"></i>
+                            <span>@username_wanita</span> </a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-10 animate__animated animate__fadeIn animate__delay-2s">
+                <h2 class="text-3xl font-semibold mb-6 text-center">Save the Date</h2>
+                <p class="text-lg sm:text-xl mb-6 text-center">Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami:</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="inner-glassmorphism p-5 text-left">
+                        <h3 class="text-2xl font-semibold mb-3 text-pink-200 flex items-center"><i class="fas fa-ring mr-2"></i>Akad Nikah</h3>
+                        <p class="text-md mb-1"><span class="font-semibold"><i class="fas fa-calendar-alt mr-1 w-4 text-center"></i> Hari/Tanggal:</span> [Hari], [Tanggal] [Bulan] [Tahun]</p>
+                        <p class="text-md mb-1"><span class="font-semibold"><i class="fas fa-clock mr-1 w-4 text-center"></i> Waktu:</span> Pukul [Waktu Mulai] - [Waktu Selesai] WIB</p>
+                        <p class="text-md"><span class="font-semibold"><i class="fas fa-map-marker-alt mr-1 w-4 text-center"></i> Tempat:</span> [Alamat Lengkap Lokasi Akad]</p>
+                    </div>
+                    <div class="inner-glassmorphism p-5 text-left">
+                        <h3 class="text-2xl font-semibold mb-3 text-blue-200 flex items-center"><i class="fas fa-glass-cheers mr-2"></i>Resepsi</h3>
+                        <p class="text-md mb-1"><span class="font-semibold"><i class="fas fa-calendar-alt mr-1 w-4 text-center"></i> Hari/Tanggal:</span> [Hari], [Tanggal] [Bulan] [Tahun]</p>
+                        <p class="text-md mb-1"><span class="font-semibold"><i class="fas fa-clock mr-1 w-4 text-center"></i> Waktu:</span> Pukul [Waktu Mulai] - [Waktu Selesai] WIB</p>
+                        <p class="text-md"><span class="font-semibold"><i class="fas fa-map-marker-alt mr-1 w-4 text-center"></i> Tempat:</span> [Alamat Lengkap Lokasi Resepsi]</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-10 animate__animated animate__fadeIn animate__delay-3s inner-glassmorphism p-6">
+                <p class="text-lg sm:text-xl italic text-center">"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu istri-istri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya di antaramu rasa kasih dan sayang..."</p>
+                <p class="mt-2 text-md text-center">(QS. Ar-Rum: 21)</p>
+            </section>
+
+             <section class="mb-10 animate__animated animate__fadeIn animate__delay-3s">
+                <h2 class="text-3xl font-semibold mb-6 text-center">Buku Tamu & Ucapan</h2>
+                <div class="inner-glassmorphism p-6 guestbook-form mb-6">
+                    <h3 class="text-xl font-semibold mb-4">Kirim Ucapan & Doa Restu</h3>
+                    <form action="#" method="POST" onsubmit="alert('Terima kasih atas ucapannya! (Fitur ini hanya demonstrasi)'); return false;">
+                        <input type="text" name="guest_name" placeholder="Nama Anda" required class="block">
+                        <textarea name="guest_message" rows="4" placeholder="Tulis ucapan atau doa Anda di sini..." required class="block"></textarea>
+                        <button type="submit" class="submit-button">
+                            <i class="fas fa-paper-plane mr-2"></i>Kirim Ucapan
+                        </button>
+                    </form>
+                    <p class="text-xs mt-4 text-gray-400">*Fitur pengiriman ucapan ini hanya demonstrasi visual.</p>
+                </div>
+                </section>
+
+            <footer class="animate__animated animate__fadeInUp animate__delay-3s">
+                 <p class="mb-6 text-md">Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu kepada kami.</p>
+                 <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                     <a href="[Link RSVP Anda, misal Google Form atau WhatsApp]" target="_blank" class="inline-block bg-gradient-to-r from-pink-500 to-blue-500 hover:from-pink-600 hover:to-blue-600 text-white font-bold py-3 px-8 rounded-full transition duration-300 ease-in-out transform hover:scale-105 shadow-lg">
+                         <i class="fas fa-check-circle mr-2"></i>Konfirmasi Kehadiran (RSVP)
+                     </a>
+                     <a href="https://wa.me/6281234567890?text=Halo%2C%20saya%20ingin%20bertanya%20mengenai%20undangan%20pernikahan%20[Nama Pasangan]" target="_blank" class="inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full transition duration-300 ease-in-out transform hover:scale-105 shadow-lg">
+                         <i class="fab fa-whatsapp mr-2"></i>Hubungi via WhatsApp
+                     </a>
+                 </div>
+                 <p class="mt-8 text-sm">Hormat kami,</p>
+                 <p class="text-lg font-semibold">[Nama Keluarga Pria] & [Nama Keluarga Wanita]</p>
+            </footer>
+
+        </div> <section class="w-full max-w-3xl animate__animated animate__fadeInUp animate__delay-4s">
+             <h2 class="text-3xl font-semibold mb-6 text-center text-white">Lokasi Acara</h2>
+             <div class="map-container glassmorphism">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.666421979105!2d106.82496667475984!3d-6.175392393809605!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f5d2e764b12d%3A0x3d2ad6e1e0e9bcc8!2sMonumen%20Nasional!5e0!3m2!1sid!2sid!4v1713668002153!5m2!1sid!2sid"
+                    style="border:0;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    title="Peta Lokasi Acara">
+                </iframe>
+             </div>
+        </section>
+
+    </div> </body>
+</html>
