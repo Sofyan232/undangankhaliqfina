@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undangan Pernikahan - [Nama Pasangan]</title>
+    <title>Undangan Pernikahan - Abdul Khaliq & Fina Aulia</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,22 +19,54 @@
             font-family: 'Inter', sans-serif;
             overflow-x: hidden; /* Mencegah scroll horizontal */
             position: relative; /* Diperlukan untuk elemen posisi absolut/fixed */
-            background-color: #111827; /* Fallback background jika video lambat load */
+            background-color: #111827; /* Fallback background */
+            /* Tambahkan padding-top untuk memberi ruang bagi audio player */
+            padding-top: 80px; /* Sesuaikan tinggi ini jika perlu */
         }
 
-        /* Gaya untuk video background */
-        #video-bg {
+        /* --- Background Image Fade Animation --- */
+        #background-images {
             position: fixed;
-            right: 0;
-            bottom: 0;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            z-index: -100; /* Pastikan video di belakang konten */
-            object-fit: cover; /* Pastikan video menutupi area */
-            filter: brightness(0.5); /* Sedikit meredupkan video agar teks lebih terbaca */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -100; /* Pastikan background di belakang konten */
+            overflow: hidden; /* Mencegah gambar keluar */
         }
+
+        #background-images img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Pastikan gambar menutupi area */
+            opacity: 0; /* Mulai dengan transparan */
+            animation: fadeBackground 18s infinite; /* Durasi total animasi (6s per gambar * 3 gambar) */
+            filter: brightness(0.5); /* Sedikit meredupkan gambar agar teks lebih terbaca */
+        }
+
+        /* Delay animasi untuk setiap gambar */
+        #background-images img:nth-child(1) {
+            animation-delay: 0s;
+        }
+        #background-images img:nth-child(2) {
+            animation-delay: 6s; /* Mulai setelah gambar pertama selesai fase visible */
+        }
+        #background-images img:nth-child(3) {
+            animation-delay: 12s; /* Mulai setelah gambar kedua selesai fase visible */
+        }
+
+        @keyframes fadeBackground {
+            0% { opacity: 0; } /* Mulai transparan */
+            10% { opacity: 1; } /* Fade in selama 10% durasi (1.8s) */
+            33.33% { opacity: 1; } /* Tetap visible hingga 1/3 durasi (6s) */
+            43.33% { opacity: 0; } /* Fade out selama 10% durasi (1.8s) */
+            100% { opacity: 0; } /* Tetap transparan hingga akhir siklus */
+        }
+        /* --- End Background Image Fade Animation --- */
+
 
         /* Gaya Glassmorphism */
         .glassmorphism {
@@ -62,6 +94,17 @@
             position: relative;
             z-index: 10; /* Naikkan z-index agar di atas dekorasi bunga */
             padding-bottom: 4rem; /* Beri ruang di bawah */
+            /* Hapus min-h-screen jika body sudah punya padding-top */
+            /* min-height: calc(100vh - 80px); */ /* Contoh jika ingin tetap full height */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* justify-content: center; */ /* Hapus ini agar konten mulai dari atas */
+            padding: 1rem; /* Default padding */
+            padding-left: 1.5rem; /* Adjust for sm breakpoint */
+            padding-right: 1.5rem; /* Adjust for sm breakpoint */
+            padding-top: 2rem; /* Adjust for md breakpoint */
+            padding-bottom: 2rem; /* Adjust for md breakpoint */
         }
 
         /* --- Dekorasi Tambahan --- */
@@ -74,7 +117,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none; /* Agar tidak mengganggu interaksi mouse */
-            z-index: 5; /* Di antara video dan konten */
+            z-index: 5; /* Di antara background dan konten */
             overflow: hidden;
         }
 
@@ -86,6 +129,7 @@
             opacity: 0.6; /* Sedikit lebih redup */
             animation: fall linear infinite;
             text-shadow: 0 0 5px rgba(255, 192, 203, 0.5); /* Efek glow pink */
+            color: #fecdd3; /* Warna bunga (pink muda) */
         }
 
         /* Keyframes animasi jatuh */
@@ -125,7 +169,7 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
-        /* Gaya untuk tombol Instagram (menggantikan .icon-button sebelumnya) */
+        /* Gaya untuk tombol Instagram */
         .instagram-button {
             display: inline-flex; /* Agar ikon dan teks sejajar */
             align-items: center; /* Tengah secara vertikal */
@@ -154,52 +198,138 @@
              margin-right: 0.5rem; /* Jarak antara ikon dan teks */
         }
 
-        /* Keyframes untuk animasi gradien */
+        /* Keyframes untuk animasi gradien tombol instagram */
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-
-        /* Gaya untuk Buku Tamu */
-        .guestbook-form textarea,
-        .guestbook-form input {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 0.5rem;
-            padding: 0.75rem;
-            color: white;
+        /* --- Image Slider Styles --- */
+        .image-slider-container {
             width: 100%;
-            margin-bottom: 1rem;
-            transition: border-color 0.3s ease;
+            max-width: 600px; /* Atur lebar maksimum slider */
+            margin: 2rem auto; /* Jarak atas/bawah dan tengahkan */
+            overflow: hidden; /* Sembunyikan bagian gambar yang keluar */
+            border-radius: 1rem; /* Sudut membulat */
+            position: relative; /* Untuk positioning dots */
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            /* Optional: Tambahkan efek glassmorphism jika diinginkan */
+             background: rgba(255, 255, 255, 0.05);
+             backdrop-filter: blur(8px);
+             -webkit-backdrop-filter: blur(8px);
         }
-        .guestbook-form textarea:focus,
-        .guestbook-form input:focus {
-            outline: none;
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-        .guestbook-form ::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-        .submit-button {
-             background-color: rgba(255, 255, 255, 0.2);
-             border: 1px solid rgba(255, 255, 255, 0.3);
-             padding: 0.75rem 1.5rem;
-             border-radius: 999px; /* Pill shape */
-             color: white;
-             font-weight: bold;
-             transition: all 0.3s ease;
-             cursor: pointer;
-        }
-         .submit-button:hover {
-             background-color: rgba(255, 255, 255, 0.3);
-             transform: translateY(-2px);
-             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-         }
 
-        /* Placeholder untuk komentar tamu (dihapus sesuai permintaan) */
-        /* .guestbook-entry { ... } */
+        .image-slider-wrapper {
+            display: flex; /* Susun gambar secara horizontal */
+            transition: transform 0.5s ease-in-out; /* Animasi geser */
+        }
+
+        .image-slider-wrapper img {
+            width: 100%; /* Setiap gambar mengisi lebar container */
+            flex-shrink: 0; /* Mencegah gambar menyusut */
+            display: block; /* Hapus spasi bawah default */
+            aspect-ratio: 16 / 9; /* Jaga rasio aspek gambar (sesuaikan jika perlu) */
+            object-fit: cover; /* Pastikan gambar menutupi area tanpa distorsi */
+            cursor: pointer; /* Tambahkan cursor pointer untuk menandakan bisa diklik */
+        }
+
+        /* --- Slider Dots Styles --- */
+        .slider-dots {
+            position: absolute;
+            bottom: 15px; /* Jarak dari bawah slider */
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px; /* Jarak antar dot */
+        }
+
+        .slider-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5); /* Warna dot non-aktif */
+            border: none; /* Hapus border default button */
+            padding: 0; /* Hapus padding default button */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .slider-dot.active {
+            background-color: white; /* Warna dot aktif */
+        }
+        /* --- End Slider Dots Styles --- */
+
+        /* --- Modal Styles --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85); /* Latar belakang gelap transparan */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Pastikan modal di atas segalanya */
+            opacity: 0; /* Mulai tersembunyi */
+            visibility: hidden; /* Mulai tersembunyi */
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            padding: 1rem; /* Padding untuk layar kecil */
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 90vw; /* Lebar maksimum konten modal */
+            max-height: 90vh; /* Tinggi maksimum konten modal */
+            background: #2d3748; /* Background modal sedikit lebih terang */
+            padding: 10px; /* Padding kecil di sekitar gambar */
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content img {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-width: 100%; /* Pastikan gambar tidak melebihi lebar konten */
+            max-height: calc(90vh - 60px); /* Tinggi maks gambar (kurangi padding & tombol close) */
+            object-fit: contain; /* Tampilkan seluruh gambar tanpa crop */
+            border-radius: 0.25rem; /* Sedikit rounded corner pada gambar */
+        }
+
+        .modal-close-button {
+            position: absolute;
+            top: -15px; /* Posisikan sedikit di atas kanan konten */
+            right: -15px;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #333;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            z-index: 1001; /* Pastikan tombol close di atas gambar */
+        }
+
+        .modal-close-button:hover {
+            background-color: white;
+            transform: scale(1.1);
+        }
+        /* --- End Modal Styles --- */
 
         /* Gaya untuk Google Maps */
         .map-container {
@@ -215,14 +345,105 @@
             border: none; /* Hapus border default iframe */
         }
 
+         /* --- NEW: Audio Player Styles --- */
+        #audio-player-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Agar elemen terdistribusi */
+            z-index: 50; /* Di atas bunga, di bawah modal */
+            color: white;
+            /* Gradient Background Animation */
+            background: linear-gradient(-45deg, #4a0e97, #a31f8f, #e6683c, #f09433);
+            background-size: 400% 400%;
+            animation: gradientShiftPlayer 15s ease infinite;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes gradientShiftPlayer {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        #play-pause-button {
+            background: linear-gradient(-45deg, #f09433, #e6683c, #cc2366, #bc1888);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            flex-shrink: 0; /* Mencegah tombol menyusut */
+            margin-right: 15px; /* Jarak ke seekbar */
+        }
+
+        #play-pause-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .seek-bar-container {
+            flex-grow: 1; /* Ambil sisa ruang */
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            margin: 0 15px; /* Jarak dari tombol dan waktu */
+        }
+
+        #seek-bar-progress {
+            height: 100%;
+            width: 0; /* Mulai dari 0 */
+            background-color: white;
+            border-radius: 4px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .time-display {
+            font-size: 0.9rem;
+            min-width: 90px; /* Lebar minimum agar tidak bergeser saat waktu berubah */
+            text-align: right;
+            flex-shrink: 0; /* Mencegah waktu menyusut */
+        }
+        /* --- End Audio Player Styles --- */
+
     </style>
 </head>
 <body class="bg-gray-900 text-white">
 
-    <video autoplay muted loop id="video-bg">
-        <source src="https://cdn.pixabay.com/video/2023/09/29/182810-869773948_large.mp4" type="video/mp4">
-        Browser Anda tidak mendukung tag video.
-    </video>
+    <div id="audio-player-container">
+        <button id="play-pause-button" aria-label="Putar Audio">
+            <i class="fas fa-play"></i>
+        </button>
+        <div class="seek-bar-container" id="seek-bar-container">
+            <div id="seek-bar-progress"></div>
+        </div>
+        <div class="time-display">
+            <span id="current-time">0:00</span> / <span id="total-duration">0:00</span>
+        </div>
+        <audio id="wedding-audio" src="https://rr7---sn-2uuxa3vh-cqwl.googlevideo.com/videoplayback?expire=1745270575&ei=z2IGaJfxC6SK4-EPkf7V4AQ&ip=36.82.33.92&id=o-AHZ8Ug9l_eVjmY-4OPajKFQuqj0gFUDlw50eOKzIndm1&itag=140&source=youtube&requiressl=yes&xpc=EgVo2aDSNQ%3D%3D&met=1745248975%2C&mh=4P&mm=31%2C29&mn=sn-2uuxa3vh-cqwl%2Csn-npoeenee&ms=au%2Crdu&mv=m&mvi=7&pl=20&rms=au%2Cau&initcwndbps=856250&bui=AccgBcOzHrFgbqiy5WudX3nID8SE5TUJuHZlaxGnQzkdyZgkZWg8SZ75v3Iney6GaHHPPHaooYdTtSUP&vprv=1&svpuc=1&mime=audio%2Fmp4&ns=RoErO7ujicXSbu3e96oYDwEQ&rqh=1&gir=yes&clen=3404009&dur=210.279&lmt=1716041044401425&mt=1745248396&fvip=2&keepalive=yes&lmw=1&c=TVHTML5&sefc=1&txp=5532434&n=WFxpcN4eSNUhlQ&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cxpc%2Cbui%2Cvprv%2Csvpuc%2Cmime%2Cns%2Crqh%2Cgir%2Cclen%2Cdur%2Clmt&lsparams=met%2Cmh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Crms%2Cinitcwndbps&lsig=ACuhMU0wRgIhAOyMmeFu_et-TN2OK2moc_UOi7vZ9UNmhTtBJG3Bk8KmAiEAiwhz7LF3YIVAi1-eHyV0FF8KeaR1s9OfNvzrEOtfoAo%3D&sig=AJfQdSswRgIhAOVNR0YWGcaS5ODG5cTqicdtZaDvhO2_QDjq7eyy3N-iAiEAgwJ-VCghqjVCD51yU4XWwd_DIlDfIWwpp9Kthpyxl7E%3D" preload="auto" autoplay type="audio/mpeg"></audio>
+        </div>
+    <div id="background-images">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiDdWe7sMrJvWt7EBG983hu-nakYZj1wBo1bVcCLviL8LYICxBmRW49bBYjiYtQHrcGPU0MaGzfJHXjkMFCUtOwJ8lrmgu639abMGrQrwOh5EzQ7Yi9aBmxMcc5W8HUy4aB3XOXYAI1xRkZlvvVSaZSJBz5VXiCi4SXbBgrITNmfsJ2cJzHnVqz6MnOmooZ/s16000-rw/IMG-20250421-WA0001.jpg" alt="Wedding Background 1" onerror="this.style.display='none'">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjG9ipstMu1aEsbFi7DMd8x0wL2cYBcJkbpmciQP60J1GxmJmFKxJJ2nAdSiZLnNAy1NjTVC86Ul2USXmuSWfZ9zu_elifK7bUs6lvgQNal5kZk0lu13p7Pa082FM2Lr1E4Tqb1gC3WqvhFevjJLF0nMvy4xec5AM5Wh9wsNrMX4RmxYXcBBYkN3M25vall/s16000-rw/IMG-20250421-WA0003.jpg" alt="Wedding Background 2" onerror="this.style.display='none'">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjwuxfPTLa2NAwR6sZXph14brGN1ZaiG5cXqJmUbnPXIeXtmng-wemo8YCPLGfhWA00UnC6sBbpM7wBbezXO7unATCSLGKcvi49Q1iaYSuAD-PK2ii7GPVfbAzWFT4OEYZ4SsrXYEQKxI3e92wO6ODOyR8jKlxpH3YYH-zF0EcGLidgisA8WLtWGpy2obqP/s16000-rw/IMG-20250421-WA0002.jpg" alt="Wedding Background 3" onerror="this.style.display='none'">
+    </div>
 
     <div class="flower-container" aria-hidden="true">
         <span class="flower">🌸</span> <span class="flower">🌸</span> <span class="flower">🌸</span>
@@ -231,61 +452,75 @@
         <span class="flower">🌸</span> <span class="flower">🌸</span> <span class="flower">🌸</span>
     </div>
 
-    <div class="content-wrapper min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 md:p-8">
+    <div class="content-wrapper">
 
-        <div class="glassmorphism w-full max-w-3xl p-6 sm:p-8 md:p-10 text-center animate__animated animate__fadeInUp mb-8">
+        <div class="glassmorphism w-full max-w-3xl p-6 sm:p-8 md:p-10 text-center animate__animated animate__fadeInUp mb-8" style="margin-bottom: 0px;">
 
             <header class="mb-8">
                 <h2 class="text-xl sm:text-2xl font-light mb-2 animate__animated animate__fadeInDown animate__delay-1s">Undangan Pernikahan</h2>
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-pink-300 mb-2 animate__animated animate__fadeInDown animate__delay-1s">[Nama Mempelai Pria]</h1>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-pink-300 mb-2 animate__animated animate__fadeInDown animate__delay-1s">Abdul Khaliq</h1>
                 <span class="text-2xl sm:text-3xl font-light mx-4 animate__animated animate__fadeIn animate__delay-2s">&</span>
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-blue-300 mb-4 animate__animated animate__fadeInUp animate__delay-1s">[Nama Mempelai Wanita]</h1>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-blue-300 mb-4 animate__animated animate__fadeInUp animate__delay-1s">Fina Aulia</h1>
                 <p class="text-lg sm:text-xl mt-4 animate__animated animate__fadeIn animate__delay-2s">Kami mengundang Anda untuk merayakan cinta kami</p>
             </header>
 
-             <section class="mb-10 animate__animated animate__fadeIn animate__delay-2s">
+            <section class="mb-10 animate__animated animate__fadeIn animate__delay-2s">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                     <div class="text-center">
-                        <img src="https://awsimages.detik.net.id/community/media/visual/2023/04/03/jas-pengantin-pria-2_34.jpeg?w=1200"
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgda0vcw82uMcnyY2JXQrmVBSBdn9j5yvK5DbqdMQNEZoBkO2wF8dyd7g3AjUrtwLLHC9tNwDGsiosKnpICvdl72kQPdZ8lkB62x8jEf0DNa6vAAnHoe67gWZMcWinccssOJ9V9wIyxQFHYMJm1hpilmacOOK72Tc413oTHggUK0ycWLA67NzJzzQtLFsXY/s16000-rw/k.png"
                              alt="Foto Mempelai Pria"
                              class="profile-img"
                              onerror="this.onerror=null; this.src='https://placehold.co/120x120/CCCCCC/FFFFFF?text=Foto+?';">
-                        <h3 class="text-2xl font-semibold mb-2 text-pink-200">[Nama Lengkap Pria]</h3>
-                        <p class="text-sm mb-3 text-gray-300">Putra dari Bapak [Nama Ayah Pria] & Ibu [Nama Ibu Pria]</p>
-                        <a href="https://instagram.com/username_pria" target="_blank" class="instagram-button" aria-label="Instagram Mempelai Pria">
+                        <h3 class="text-2xl font-semibold mb-2 text-pink-200">Abdul Khaliq</h3>
+                        <p class="text-sm mb-3 text-gray-300">Putra dari Bapak Taberani & Ibu Thaibah</p>
+                        <a href="https://instagram.com/ab_khlq" target="_blank" class="instagram-button" aria-label="Instagram Mempelai Pria">
                             <i class="fab fa-instagram"></i>
-                            <span>@username_pria</span> </a>
+                            <span>@ab_khlq</span>
+                        </a>
                     </div>
                     <div class="text-center">
-                         <img src="https://i.pinimg.com/originals/57/a2/9e/57a29e8baed3c43c96021a36d21c480b.jpg"
+                         <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjKCGb-N-wXfZ_fAfAF7x5N6C9zmYvz4fugiomVFJd0Mz1NUGJa4nSSmM-qkjjsqWeZhERSvrpljxg6XKlapJi-KkQ0wV1XAOb4PJM9DG2HO3fpcokCfWheN2UXBlZp_h-iLxOcfczcEnpCptMTMLEv-MaaoHmHvrNqTJIP_3yObPqsGDt0BEUJaWSs2PQb/s16000-rw/f.png"
                              alt="Foto Mempelai Wanita"
                              class="profile-img"
                              onerror="this.onerror=null; this.src='https://placehold.co/120x120/CCCCCC/FFFFFF?text=Foto+?';">
-                        <h3 class="text-2xl font-semibold mb-2 text-blue-200">[Nama Lengkap Wanita]</h3>
-                        <p class="text-sm mb-3 text-gray-300">Putri dari Bapak [Nama Ayah Wanita] & Ibu [Nama Ibu Wanita]</p>
-                         <a href="https://instagram.com/username_wanita" target="_blank" class="instagram-button" aria-label="Instagram Mempelai Wanita">
+                        <h3 class="text-2xl font-semibold mb-2 text-blue-200">Fina Aulia</h3>
+                        <p class="text-sm mb-3 text-gray-300">Putri dari Bapak Juanda Hardi & Ibu Mismah Herliani</p>
+                         <a href="https://instagram.com/fina.auliaa_" target="_blank" class="instagram-button" aria-label="Instagram Mempelai Wanita">
                             <i class="fab fa-instagram"></i>
-                            <span>@username_wanita</span> </a>
+                            <span>@fina.auliaa_</span>
+                         </a>
                     </div>
                 </div>
             </section>
 
             <section class="mb-10 animate__animated animate__fadeIn animate__delay-2s">
-                <h2 class="text-3xl font-semibold mb-6 text-center">Save the Date</h2>
+                <h2 class="text-3xl font-semibold mb-6 text-center">Catat Tanggalnya</h2>
                 <p class="text-lg sm:text-xl mb-6 text-center">Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami:</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="inner-glassmorphism p-5 text-left">
                         <h3 class="text-2xl font-semibold mb-3 text-pink-200 flex items-center"><i class="fas fa-ring mr-2"></i>Akad Nikah</h3>
-                        <p class="text-md mb-1"><span class="font-semibold"><i class="fas fa-calendar-alt mr-1 w-4 text-center"></i> Hari/Tanggal:</span> [Hari], [Tanggal] [Bulan] [Tahun]</p>
-                        <p class="text-md mb-1"><span class="font-semibold"><i class="fas fa-clock mr-1 w-4 text-center"></i> Waktu:</span> Pukul [Waktu Mulai] - [Waktu Selesai] WIB</p>
-                        <p class="text-md"><span class="font-semibold"><i class="fas fa-map-marker-alt mr-1 w-4 text-center"></i> Tempat:</span> [Alamat Lengkap Lokasi Akad]</p>
+                        <p class="text-md mb-1"><span class="font-semibold"><i class="fas fa-calendar-alt mr-1 w-4 text-center"></i> Hari/Tanggal:</span> Kamis, 03 april 2025</p>
+                        <p class="text-md mb-1"><span class="font-semibold"><i class="fas fa-clock mr-1 w-4 text-center"></i> Waktu:</span> Pukul 10.00 WITA - Selesai</p>
+                        <p class="text-md"><span class="font-semibold"><i class="fas fa-map-marker-alt mr-1 w-4 text-center"></i> Tempat:</span> Kitun Raya, Seberang Pondok Pesantren Nurul Muhibbin Putra Barabai</p>
                     </div>
                     <div class="inner-glassmorphism p-5 text-left">
                         <h3 class="text-2xl font-semibold mb-3 text-blue-200 flex items-center"><i class="fas fa-glass-cheers mr-2"></i>Resepsi</h3>
-                        <p class="text-md mb-1"><span class="font-semibold"><i class="fas fa-calendar-alt mr-1 w-4 text-center"></i> Hari/Tanggal:</span> [Hari], [Tanggal] [Bulan] [Tahun]</p>
-                        <p class="text-md mb-1"><span class="font-semibold"><i class="fas fa-clock mr-1 w-4 text-center"></i> Waktu:</span> Pukul [Waktu Mulai] - [Waktu Selesai] WIB</p>
-                        <p class="text-md"><span class="font-semibold"><i class="fas fa-map-marker-alt mr-1 w-4 text-center"></i> Tempat:</span> [Alamat Lengkap Lokasi Resepsi]</p>
+                        <p class="text-md mb-1"><span class="font-semibold"><i class="fas fa-calendar-alt mr-1 w-4 text-center"></i> Hari/Tanggal:</span> Kamis, 22 Mei 2025</p>
+                        <p class="text-md mb-1"><span class="font-semibold"><i class="fas fa-clock mr-1 w-4 text-center"></i> Waktu:</span> Pukul 08.00 WITA - Selesai</p>
+                        <p class="text-md"><span class="font-semibold"><i class="fas fa-map-marker-alt mr-1 w-4 text-center"></i> Tempat:</span> Desa Bakapas ,RT 02 RW 01 ( dekat pabrik padi ), Kec. Barabai, Kab. Hulu Sungai Tengah</p>
                     </div>
+                </div>
+            </section>
+
+            <section class="mb-10 animate__animated animate__fadeIn animate__delay-3s">
+                <h2 class="text-3xl font-semibold mb-6 text-center">Galeri Foto</h2>
+                <div class="image-slider-container">
+                    <div class="image-slider-wrapper">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiDdWe7sMrJvWt7EBG983hu-nakYZj1wBo1bVcCLviL8LYICxBmRW49bBYjiYtQHrcGPU0MaGzfJHXjkMFCUtOwJ8lrmgu639abMGrQrwOh5EzQ7Yi9aBmxMcc5W8HUy4aB3XOXYAI1xRkZlvvVSaZSJBz5VXiCi4SXbBgrITNmfsJ2cJzHnVqz6MnOmooZ/s16000-rw/IMG-20250421-WA0001.jpg" alt="Gallery Image 1" onerror="this.onerror=null; this.src='https://placehold.co/600x337/CCCCCC/FFFFFF?text=Gagal+Load';">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjG9ipstMu1aEsbFi7DMd8x0wL2cYBcJkbpmciQP60J1GxmJmFKxJJ2nAdSiZLnNAy1NjTVC86Ul2USXmuSWfZ9zu_elifK7bUs6lvgQNal5kZk0lu13p7Pa082FM2Lr1E4Tqb1gC3WqvhFevjJLF0nMvy4xec5AM5Wh9wsNrMX4RmxYXcBBYkN3M25vall/s16000-rw/IMG-20250421-WA0003.jpg" alt="Gallery Image 2" onerror="this.onerror=null; this.src='https://placehold.co/600x337/CCCCCC/FFFFFF?text=Gagal+Load';">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjwuxfPTLa2NAwR6sZXph14brGN1ZaiG5cXqJmUbnPXIeXtmng-wemo8YCPLGfhWA00UnC6sBbpM7wBbezXO7unATCSLGKcvi49Q1iaYSuAD-PK2ii7GPVfbAzWFT4OEYZ4SsrXYEQKxI3e92wO6ODOyR8jKlxpH3YYH-zF0EcGLidgisA8WLtWGpy2obqP/s16000-rw/IMG-20250421-WA0002.jpg" alt="Gallery Image 3" onerror="this.onerror=null; this.src='https://placehold.co/600x337/CCCCCC/FFFFFF?text=Gagal+Load';">
+                        </div>
+                    <div class="slider-dots"></div>
                 </div>
             </section>
 
@@ -294,48 +529,298 @@
                 <p class="mt-2 text-md text-center">(QS. Ar-Rum: 21)</p>
             </section>
 
-             <section class="mb-10 animate__animated animate__fadeIn animate__delay-3s">
-                <h2 class="text-3xl font-semibold mb-6 text-center">Buku Tamu & Ucapan</h2>
-                <div class="inner-glassmorphism p-6 guestbook-form mb-6">
-                    <h3 class="text-xl font-semibold mb-4">Kirim Ucapan & Doa Restu</h3>
-                    <form action="#" method="POST" onsubmit="alert('Terima kasih atas ucapannya! (Fitur ini hanya demonstrasi)'); return false;">
-                        <input type="text" name="guest_name" placeholder="Nama Anda" required class="block">
-                        <textarea name="guest_message" rows="4" placeholder="Tulis ucapan atau doa Anda di sini..." required class="block"></textarea>
-                        <button type="submit" class="submit-button">
-                            <i class="fas fa-paper-plane mr-2"></i>Kirim Ucapan
-                        </button>
-                    </form>
-                    <p class="text-xs mt-4 text-gray-400">*Fitur pengiriman ucapan ini hanya demonstrasi visual.</p>
-                </div>
-                </section>
-
             <footer class="animate__animated animate__fadeInUp animate__delay-3s">
                  <p class="mb-6 text-md">Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu kepada kami.</p>
-                 <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-                     <a href="[Link RSVP Anda, misal Google Form atau WhatsApp]" target="_blank" class="inline-block bg-gradient-to-r from-pink-500 to-blue-500 hover:from-pink-600 hover:to-blue-600 text-white font-bold py-3 px-8 rounded-full transition duration-300 ease-in-out transform hover:scale-105 shadow-lg">
-                         <i class="fas fa-check-circle mr-2"></i>Konfirmasi Kehadiran (RSVP)
-                     </a>
-                     <a href="https://wa.me/6281234567890?text=Halo%2C%20saya%20ingin%20bertanya%20mengenai%20undangan%20pernikahan%20[Nama Pasangan]" target="_blank" class="inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full transition duration-300 ease-in-out transform hover:scale-105 shadow-lg">
-                         <i class="fab fa-whatsapp mr-2"></i>Hubungi via WhatsApp
-                     </a>
-                 </div>
                  <p class="mt-8 text-sm">Hormat kami,</p>
-                 <p class="text-lg font-semibold">[Nama Keluarga Pria] & [Nama Keluarga Wanita]</p>
+                 <p class="text-lg font-semibold">Bapak Taberani dan Ibu Thaibah & Bapak Juanda Hardi dan Ibu Mismah Herliani</p>
             </footer>
 
-        </div> <section class="w-full max-w-3xl animate__animated animate__fadeInUp animate__delay-4s">
+        </div> <section class="w-full max-w-3xl animate__animated animate__fadeInUp animate__delay-4s mt-8">
              <h2 class="text-3xl font-semibold mb-6 text-center text-white">Lokasi Acara</h2>
              <div class="map-container glassmorphism">
-                <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.666421979105!2d106.82496667475984!3d-6.175392393809605!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f5d2e764b12d%3A0x3d2ad6e1e0e9bcc8!2sMonumen%20Nasional!5e0!3m2!1sid!2sid!4v1713668002153!5m2!1sid!2sid"
-                    style="border:0;"
-                    allowfullscreen=""
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"
-                    title="Peta Lokasi Acara">
-                </iframe>
+                 <iframe
+                     src="https://www.google.com/maps/embed?pb=!4v1745229266490!6m8!1m7!1suZDj4KNgq3AHy9lVcp9kqQ!2m2!1d-2.546199133340094!2d115.3920451793152!3f178.97106709507554!4f2.191122785636793!5f0.7820865974627469" /* Ganti dengan URL embed Google Maps yang benar */
+                     style="border:0;"
+                     allowfullscreen=""
+                     loading="lazy"
+                     referrerpolicy="no-referrer-when-downgrade"
+                     title="Peta Lokasi Acara">
+                 </iframe>
              </div>
-        </section>
+        </section> </div> <div id="imageModal" class="modal-overlay" aria-modal="true" role="dialog" aria-labelledby="modalTitle">
+        <div class="modal-content">
+            <button id="modalCloseButton" class="modal-close-button" aria-label="Tutup Gambar">×</button>
+            <img id="modalImage" src="" alt="Gambar Galeri Ukuran Penuh">
+            <h2 id="modalTitle" class="sr-only">Tampilan Gambar Penuh</h2>
+        </div>
+    </div>
+    <script>
+        // --- Slider Logic ---
+        const sliderWrapper = document.querySelector('.image-slider-wrapper');
+        const sliderImages = sliderWrapper ? sliderWrapper.querySelectorAll('img') : []; // Check if sliderWrapper exists
+        const dotsContainer = document.querySelector('.slider-dots'); // Get dots container
+        const totalImages = sliderImages.length;
+        let currentIndex = 0;
+        const slideIntervalTime = 4000; // Ganti gambar setiap 4 detik
+        let slideInterval; // Untuk menyimpan interval ID
 
-    </div> </body>
+        // --- Modal Logic ---
+        const modal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalCloseButton = document.getElementById('modalCloseButton');
+
+        // --- NEW: Audio Player Logic ---
+        const audioPlayer = document.getElementById('wedding-audio');
+        const playPauseButton = document.getElementById('play-pause-button');
+        const playPauseIcon = playPauseButton ? playPauseButton.querySelector('i') : null;
+        const seekBarContainer = document.getElementById('seek-bar-container');
+        const seekBarProgress = document.getElementById('seek-bar-progress');
+        const currentTimeDisplay = document.getElementById('current-time');
+        const totalDurationDisplay = document.getElementById('total-duration');
+
+        // --- Function to format time (MM:SS) ---
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        // --- Function to toggle play/pause ---
+        function togglePlayPause() {
+            if (!audioPlayer || !playPauseIcon) return; // Guard clause
+
+            if (audioPlayer.paused || audioPlayer.ended) {
+                audioPlayer.play().catch(error => console.error("Error playing audio:", error)); // Play audio
+                playPauseIcon.classList.remove('fa-play');
+                playPauseIcon.classList.add('fa-pause');
+                playPauseButton.setAttribute('aria-label', 'Jeda Audio');
+            } else {
+                audioPlayer.pause(); // Pause audio
+                playPauseIcon.classList.remove('fa-pause');
+                playPauseIcon.classList.add('fa-play');
+                 playPauseButton.setAttribute('aria-label', 'Putar Audio');
+            }
+        }
+
+        // --- Function to update seek bar and time ---
+        function updateProgress() {
+             if (!audioPlayer || !seekBarProgress || !currentTimeDisplay || isNaN(audioPlayer.duration)) return; // Guard clause
+
+            const percentage = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            seekBarProgress.style.width = `${percentage}%`;
+            currentTimeDisplay.textContent = formatTime(audioPlayer.currentTime);
+        }
+
+        // --- Function to set audio time when seek bar is clicked ---
+        function setSeek(event) {
+             if (!audioPlayer || !seekBarContainer || isNaN(audioPlayer.duration)) return; // Guard clause
+
+            const rect = seekBarContainer.getBoundingClientRect();
+            const offsetX = event.clientX - rect.left;
+            const width = rect.width;
+            const percentage = offsetX / width;
+            audioPlayer.currentTime = percentage * audioPlayer.duration;
+            updateProgress(); // Update immediately
+        }
+
+        // --- Function to update total duration ---
+        function updateTotalDuration() {
+             if (!audioPlayer || !totalDurationDisplay || isNaN(audioPlayer.duration)) return; // Guard clause
+            totalDurationDisplay.textContent = formatTime(audioPlayer.duration);
+        }
+        // --- Function to handle autoplay ---
+        function handleAutoplay() {
+            if (!audioPlayer) return;
+
+            // Try to autoplay muted
+            audioPlayer.muted = true;
+            const playPromise = audioPlayer.play();
+
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        // Autoplay succeeded
+                        audioPlayer.muted = false;
+                        playPauseIcon.classList.remove('fa-play');
+                        playPauseIcon.classList.add('fa-pause');
+                        playPauseButton.setAttribute('aria-label', 'Jeda Audio');
+                    })
+                    .catch((error) => {
+                        console.log("Autoplay prevented:", error);
+
+                        // Show play button for manual interaction
+                        playPauseIcon.classList.remove('fa-pause');
+                        playPauseIcon.classList.add('fa-play');
+                        playPauseButton.setAttribute('aria-label', 'Putar Audio');
+
+                        // Add one-time event listener for user interaction
+                        window.addEventListener('click', startAudioOnInteraction, { once: true });
+                    });
+            }
+        }
+
+        // --- Function to play audio on user interaction ---
+        function startAudioOnInteraction() {
+            if (!audioPlayer) return;
+
+            audioPlayer.muted = false;
+            audioPlayer.play().catch((error) => console.error("Error playing audio after interaction:", error));
+            playPauseIcon.classList.remove('fa-play');
+            playPauseIcon.classList.add('fa-pause');
+            playPauseButton.setAttribute('aria-label', 'Jeda Audio');
+        }
+
+
+        // --- Function to update slider position and active dot ---
+        function updateSlider() {
+            if (!sliderWrapper || !dotsContainer) return; // Guard clause
+
+            // Update image position
+            const offset = -currentIndex * 100; // Geser sejauh 100% lebar per gambar
+            sliderWrapper.style.transform = `translateX(${offset}%)`;
+
+            // Update active dot
+            const dots = dotsContainer.querySelectorAll('.slider-dot');
+            dots.forEach((dot, index) => {
+                if (index === currentIndex) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        // --- Function to go to the next slide ---
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % totalImages;
+            updateSlider();
+        }
+
+        // --- Function to go to a specific slide ---
+        function goToSlide(index) {
+            currentIndex = index;
+            updateSlider();
+            // Reset interval when manually navigating
+            resetInterval();
+        }
+
+        // --- Function to reset the automatic slide interval ---
+        function resetInterval() {
+            clearInterval(slideInterval);
+            if (totalImages > 0) { // Only restart if there are images
+                 slideInterval = setInterval(nextSlide, slideIntervalTime);
+            }
+        }
+
+        // --- Function to open the modal ---
+        function openModal(imageSrc) {
+            if (!modal || !modalImage) return; // Guard clause
+            modalImage.src = imageSrc;
+            modal.classList.add('show');
+            // Optional: Pause slider when modal is open
+            clearInterval(slideInterval);
+             // Optional: Pause audio when modal is open
+             if(audioPlayer && !audioPlayer.paused) {
+                 audioPlayer.pause();
+                 playPauseIcon.classList.remove('fa-pause');
+                 playPauseIcon.classList.add('fa-play');
+                 playPauseButton.setAttribute('aria-label', 'Putar Audio');
+             }
+            // Add event listener for Esc key
+            document.addEventListener('keydown', handleEscKey);
+        }
+
+        // --- Function to close the modal ---
+        function closeModal() {
+            if (!modal) return; // Guard clause
+            modal.classList.remove('show');
+            // Optional: Resume slider when modal is closed
+            resetInterval();
+            // Remove event listener for Esc key
+            document.removeEventListener('keydown', handleEscKey);
+        }
+
+        // --- Function to handle Esc key press for closing modal ---
+        function handleEscKey(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        }
+
+        // --- Initialization ---
+        function initializePage() {
+            
+            // Initialize Slider
+            if (totalImages > 0 && sliderWrapper && dotsContainer) {
+                // Create dots
+                dotsContainer.innerHTML = ''; // Clear existing dots if any
+                for (let i = 0; i < totalImages; i++) {
+                    const dot = document.createElement('button'); // Use button for accessibility
+                    dot.classList.add('slider-dot');
+                    dot.setAttribute('aria-label', `Lihat gambar ${i + 1}`); // Accessibility label
+                    dot.addEventListener('click', () => goToSlide(i));
+                    dotsContainer.appendChild(dot);
+                }
+
+                // Add click listeners to images for modal
+                sliderImages.forEach(img => {
+                    img.addEventListener('click', () => openModal(img.src));
+                });
+
+                // Initial slider update
+                updateSlider();
+
+                // Start automatic sliding
+                slideInterval = setInterval(nextSlide, slideIntervalTime);
+            } else {
+                // Hide dots container if no images or container missing
+                if(dotsContainer) dotsContainer.style.display = 'none';
+            }
+
+            // Initialize Modal
+            if (modalCloseButton) {
+                modalCloseButton.addEventListener('click', closeModal);
+            }
+            if (modal) {
+                // Close modal if clicking on the overlay (outside the content)
+                modal.addEventListener('click', (event) => {
+                    if (event.target === modal) {
+                        closeModal();
+                    }
+                });
+            }
+            handleAutoplay();
+            // Initialize Audio Player
+            if (audioPlayer && playPauseButton && seekBarContainer && seekBarProgress && currentTimeDisplay && totalDurationDisplay) {
+                 playPauseButton.addEventListener('click', togglePlayPause);
+                 audioPlayer.addEventListener('timeupdate', updateProgress);
+                 audioPlayer.addEventListener('loadedmetadata', updateTotalDuration);
+                 seekBarContainer.addEventListener('click', setSeek);
+
+                 // Handle audio ending
+                 audioPlayer.addEventListener('ended', () => {
+                     playPauseIcon.classList.remove('fa-pause');
+                     playPauseIcon.classList.add('fa-play');
+                     playPauseButton.setAttribute('aria-label', 'Putar Audio');
+                     // Optional: Reset progress to 0 when ended
+                     audioPlayer.currentTime = 0;
+                     updateProgress();
+                 });
+
+                 // Initial duration update if metadata already loaded
+                 if (!isNaN(audioPlayer.duration)) {
+                    updateTotalDuration();
+                 }
+            } else {
+                console.warn("Audio player elements not found. Player disabled.");
+                const playerContainer = document.getElementById('audio-player-container');
+                if (playerContainer) playerContainer.style.display = 'none'; // Hide the player if elements are missing
+            }
+        }
+
+        // --- Run Initialization on Load ---
+        window.addEventListener('load', initializePage);
+
+    </script>
+    </body>
 </html>
