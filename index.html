@@ -430,29 +430,10 @@
             transform: translateZ(0);
             -webkit-transform: translateZ(0);
         }
-        .video-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-.video-card {
-  background: #111;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  overflow: hidden;
-  max-width: 280px;
-  width: 100%;
-}
-
-.video-card video {
-  width: 100%;
-  height: auto;
-  display: block;
-}
+        audio {
+      margin-top: 24px;
+      width: 280px;
+    }
 </style>
 </head>
 <body class="bg-gray-900 text-black">
@@ -509,14 +490,10 @@
             </section>
 
             <section class="animate__animated animate__fadeIn animate__delay-2s">
-                <div class="video-wrapper">
-                  <div class="video-card">
-                    <video id="myVideo" loop controls playsinline>
-                      <source src="https://raw.githubusercontent.com/Sofyan232/undangankhaliqfina/ed755a88301220ac825c7f35c6f335bc69933a5f/Christian%20Bautista%20-%20The%20Way%20You%20Look%20At%20Me%20(Offical%20Music%20Video)%20%5B9_9ADpx5FHE%5D.mp4" type="video/mp4">
-                      Browser tidak mendukung video.
-                    </video>
-                  </div>
-                </div>
+                <audio id="audioPlayer" autoplay loop hidden>
+                    <source src="https://raw.githubusercontent.com/Sofyan232/undangankhaliqfina/66c7a8b7c2fa58ff4bb0e7870cf048b1ddf9dbd2/Christian%20Bautista%20-%20The%20Way%20You%20Look%20At%20Me%20(Offical%20Music%20Video)%20%5B9_9ADpx5FHE%5D.m4a" type="audio/mp4">
+                    Browser kamu tidak mendukung audio.
+                  </audio>
               </section>
 
             <section class="mb-10 animate__animated animate__fadeIn animate__delay-2s">
@@ -597,30 +574,17 @@
         // Dialog Logic 
 const openBtn = document.getElementById('openBtn');
 const dialog = document.getElementById('dialog');
-const video = document.getElementById('myVideo');
+const audio = document.getElementById('audioPlayer');
 
 function closeDialog() {
   dialog.classList.add('hidden');
-  video.muted = false;
-  video.play().catch((error) => {
-    console.error('Video playback failed:', error);
-    // Fallback: unmute and try again
-    video.muted = true;
-    video.play();
-  });
+  audio.play();
 }
 
 openBtn.addEventListener("click", () => {
-      dialog.style.display = "none";
-      video.muted = false;
-      video.play();
+    dialog.style.display = "none";
+    audio.play();
     });
-
-// Ensure dialog is visible on page load
-window.addEventListener('load', () => {
-  dialog.classList.remove('hidden');
-  video.muted = true; // Mute initially to comply with autoplay policies
-});
         // --- Slider Logic ---
         const sliderWrapper = document.querySelector('.image-slider-wrapper');
         const sliderImages = sliderWrapper.querySelectorAll('img');
