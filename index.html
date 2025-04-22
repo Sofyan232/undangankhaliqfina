@@ -6,6 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Undangan Pernikahan - Abdul Khaliq & Fina Aulia</title>
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/7/70/User_icon_BLACK-01.png" type="image/png" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -70,6 +71,57 @@
             43.33% { opacity: 0; }
             100% { opacity: 0; }
         }
+        /* Dialog Awal */
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000; /* Increased to ensure it’s above other elements */
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.dialog-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.dialog-box {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  max-width: 90%;
+  width: 400px; /* Slightly larger for better readability */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  transform: translateY(0);
+  transition: transform 0.3s ease;
+}
+
+.dialog-box h2 {
+  margin-top: 0;
+  font-family: 'Inter', sans-serif;
+  color: #1f2937; /* Matches text-gray-800 */
+}
+
+.dialog-box p {
+  font-family: 'Inter', sans-serif;
+}
+
+.dialog-box button {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+}
 
         /* --- Minimalism Style --- */
         .minimalism {
@@ -378,7 +430,30 @@
             transform: translateZ(0);
             -webkit-transform: translateZ(0);
         }
-    </style>
+        .video-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.video-card {
+  background: #111;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  max-width: 280px;
+  width: 100%;
+}
+
+.video-card video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+</style>
 </head>
 <body class="bg-gray-900 text-black">
     <div id="background-images">
@@ -433,19 +508,19 @@
                 </div>
             </section>
 
-            <div style="text-align: center;padding-bottom: 15px;">
-                <iframe 
-                    style="display: block; margin: 0 auto;" 
-                    width="320" 
-                    height="240" 
-                    src="https://www.youtube.com/embed/9_9ADpx5FHE?enablejsapi=1&autoplay=1&mute=0&playsinline=1" 
-                    frameborder="0" 
-                    allowfullscreen>
-                </iframe>
-            </div>
+            <section class="animate__animated animate__fadeIn animate__delay-2s">
+                <div class="video-wrapper">
+                  <div class="video-card">
+                    <video id="myVideo" loop controls playsinline>
+                      <source src="https://raw.githubusercontent.com/Sofyan232/undangankhaliqfina/ed755a88301220ac825c7f35c6f335bc69933a5f/Christian%20Bautista%20-%20The%20Way%20You%20Look%20At%20Me%20(Offical%20Music%20Video)%20%5B9_9ADpx5FHE%5D.mp4" type="video/mp4">
+                      Browser tidak mendukung video.
+                    </video>
+                  </div>
+                </div>
+              </section>
 
             <section class="mb-10 animate__animated animate__fadeIn animate__delay-2s">
-                <h2 class="text-3xl font-semibold mb-6 text-center text-gray-800">Catat Tanggalnya</h2>
+                <h2 class="text-3xl font-semibold mb-6 text-center text-gray-800 " style="margin-top: 24px;">Catat Tanggalnya</h2>
                 <p class="text-lg sm:text-xl mb-6 text-center text-gray-800">Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami:</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="inner-minimalism p-5 text-left">
@@ -501,6 +576,14 @@
             </div>
         </section>
     </div>
+    <!-- Dialog Awal -->
+<div class="dialog-overlay" id="dialog" role="dialog" aria-labelledby="dialog-title" aria-modal="true">
+    <div class="dialog-box">
+      <h2 id="dialog-title" class="text-2xl font-semibold text-gray-800">Selamat Datang</h2>
+      <p class="text-lg text-gray-600 mb-6">Undangan Khaliq & Fina</p>
+      <button id="openBtn" class="submit-button" aria-label="Buka Undangan">Buka Undangan</button>
+    </div>
+  </div>
 
     <div id="imageModal" class="modal-overlay" aria-modal="true" role="dialog" aria-labelledby="modalTitle">
         <div class="modal-content">
@@ -511,6 +594,33 @@
     </div>
 
     <script>
+        // Dialog Logic 
+const openBtn = document.getElementById('openBtn');
+const dialog = document.getElementById('dialog');
+const video = document.getElementById('myVideo');
+
+function closeDialog() {
+  dialog.classList.add('hidden');
+  video.muted = false;
+  video.play().catch((error) => {
+    console.error('Video playback failed:', error);
+    // Fallback: unmute and try again
+    video.muted = true;
+    video.play();
+  });
+}
+
+openBtn.addEventListener("click", () => {
+      dialog.style.display = "none";
+      video.muted = false;
+      video.play();
+    });
+
+// Ensure dialog is visible on page load
+window.addEventListener('load', () => {
+  dialog.classList.remove('hidden');
+  video.muted = true; // Mute initially to comply with autoplay policies
+});
         // --- Slider Logic ---
         const sliderWrapper = document.querySelector('.image-slider-wrapper');
         const sliderImages = sliderWrapper.querySelectorAll('img');
